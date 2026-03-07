@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HANEUL 예산 관리 - 토스 스타일</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      background: #F4F5F7;
+      color: #191F28;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      min-height: 100vh;
+      padding-bottom: 100px;
+    }
+    button { font-family: inherit; cursor: pointer; }
+    button:active { transform: scale(0.98); opacity: 0.9; }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes countUp {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    @keyframes progressFill {
+      from { width: 0; }
+    }
+    .animate-fadeInUp { animation: fadeInUp 0.5s ease-out forwards; }
+    .animate-slideIn { animation: slideIn 0.4s ease-out forwards; }
+    .card {
+      background: #FFFFFF;
+      margin-bottom: 8px;
+      animation: fadeInUp 0.5s ease-out forwards;
+    }
+    .card:nth-child(2) { animation-delay: 0.1s; }
+    .card:nth-child(3) { animation-delay: 0.2s; }
+    .card:nth-child(4) { animation-delay: 0.3s; }
+
+    /* Tab Navigation */
+    .tab-nav {
+      display: flex;
+      background: #FFFFFF;
+      padding: 8px;
+      gap: 4px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      background: transparent;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #8B95A1;
+      transition: all 0.2s;
+    }
+    .tab-btn.active {
+      background: #3182F6;
+      color: #FFFFFF;
+    }
+
+    /* Filter Pills */
+    .filter-pills {
+      display: flex;
+      gap: 8px;
+      padding: 12px 20px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .filter-pills::-webkit-scrollbar { display: none; }
+    .pill {
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1px solid #E5E8EB;
+      background: #FFFFFF;
+      font-size: 13px;
+      font-weight: 500;
+      color: #6B7684;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .pill.active {
+      background: #191F28;
+      color: #FFFFFF;
+      border-color: #191F28;
+    }
+
+    /* Progress Animation */
+    .progress-bar-animated {
+      animation: progressFill 1s ease-out forwards;
+    }
+
+    /* Swipeable Cards */
+    .swipe-container {
+      display: flex;
+      gap: 12px;
+      padding: 0 20px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+    .swipe-container::-webkit-scrollbar { display: none; }
+    .swipe-card {
+      flex: 0 0 280px;
+      scroll-snap-align: start;
+    }
+
+    /* Chart Styles */
+    .bar-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      height: 120px;
+      padding: 0 4px;
+    }
+    .bar {
+      flex: 1;
+      background: linear-gradient(180deg, #3182F6 0%, #006FEE 100%);
+      border-radius: 4px 4px 0 0;
+      transition: height 0.6s ease-out;
+      position: relative;
+    }
+    .bar.highlight {
+      background: linear-gradient(180deg, #00C471 0%, #00A05E 100%);
+    }
+    .bar.warning {
+      background: linear-gradient(180deg, #F59E0B 0%, #D97706 100%);
+    }
+    .bar-label {
+      position: absolute;
+      bottom: -24px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 11px;
+      color: #8B95A1;
+    }
+
+    /* Donut Chart */
+    .donut-chart {
+      position: relative;
+      width: 160px;
+      height: 160px;
+    }
+    .donut-chart svg {
+      transform: rotate(-90deg);
+    }
+    .donut-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    /* Bottom Nav */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
+      background: #FFFFFF;
+      padding: 12px 20px 28px;
+      display: flex;
+      justify-content: space-around;
+      border-top: 1px solid #E5E8EB;
+      z-index: 100;
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      color: #8B95A1;
+      font-size: 11px;
+    }
+    .nav-item.active {
+      color: #3182F6;
+    }
+    .nav-item .icon {
+      font-size: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const budgetData = {
+      "lastUpdated": "2026-03-07",
+      "currentMonth": "2026-03",
+      "profile": {
+        "name": "HANEUL",
+        "goal": "2029년 1월 1억 달성"
+      },
+      "income": {
+        "monthly": 6370000
+      },
+      "budget": {
+        "monthlyGoal": 900000,
+        "march2026": {
+          "goal": 900000,
+          "salary": 6370000,
+          "totalBudget": 900000
+        }
+      },
+      "investments": {
+        "2026-03": {
+          "연금저축": 500693,
+          "ISA": 500000,
+          "비상금CMA": 600000,
+          "IRP": 250000,
+          "total": 1850693
+        }
+      },
+      "expenses": {
+        "2026-03": [
+          { "date": "2026-03-01", "category": "투자", "item": "연금저축", "amount": 500693 },
+          { "date": "2026-03-01", "category": "투자", "item": "ISA", "amount": 500000 },
+          { "date": "2026-03-01", "category": "투자", "item": "비상금 CMA", "amount": 600000 },
+          { "date": "2026-03-01", "category": "투자", "item": "IRP", "amount": 250000 },
+          { "date": "2026-03-01", "category": "반려동물", "item": "강아지 간식", "amount": 27490, "store": "쿠팡" },
+          { "date": "2026-03-01", "category": "장보기", "item": "참기름,계란", "amount": 25950, "store": "쿠팡" },
+          { "date": "2026-03-01", "category": "장보기", "item": "저녁 장보기", "amount": 26070 },
+          { "date": "2026-03-02", "category": "반려동물", "item": "강아지 배변패드", "amount": 8490, "store": "쿠팡" },
+          { "date": "2026-03-02", "category": "장보기", "item": "얼음", "amount": 2200 },
+          { "date": "2026-03-02", "category": "생활", "item": "맥주", "amount": 4500, "store": "편의점" },
+          { "date": "2026-03-03", "category": "대출", "item": "대출 상환", "amount": 452010 },
+          { "date": "2026-03-03", "category": "대출", "item": "대출 상환", "amount": 769700 },
+          { "date": "2026-03-03", "category": "보험", "item": "삼성화재", "amount": 103243 },
+          { "date": "2026-03-04", "category": "미용", "item": "미용실", "amount": 40000 },
+          { "date": "2026-03-04", "category": "기타", "item": "서류 제출", "amount": 3000 },
+          { "date": "2026-03-04", "category": "의료", "item": "스케일링", "amount": 18200 },
+          { "date": "2026-03-04", "category": "쇼핑", "item": "다이소", "amount": 6000 },
+          { "date": "2026-03-04", "category": "생활", "item": "편의점", "amount": 2600 },
+          { "date": "2026-03-04", "category": "생활", "item": "세탁소", "amount": 28000 },
+          { "date": "2026-03-06", "category": "카페", "item": "파리크라상", "amount": 13500 },
+          { "date": "2026-03-07", "category": "생활", "item": "음료수", "amount": 800 },
+          { "date": "2026-03-07", "category": "식비", "item": "야식 백정", "amount": 26500 }
+        ]
+      },
+      "extraIncome": {
+        "2026-03": [
+          { "date": "2026-03-03", "item": "엄마", "amount": 240000 }
+        ]
+      },
+      "summary": {
+        "2026-03": {
+          "budgetGoal": 900000,
+          "extraIncome": 240000,
+          "salary": 6370000,
+          "investmentTotal": 1850693,
+          "totalSpending": 233300,
+          "actualExpenses": 233300,
+          "remainingBudget": 906700,
+          "daysRemaining": 24
+        }
+      },
+      "roadmap": {
+        "phase1": { "period": "2025-02 ~ 2025-07", "goal": "서바이벌", "months": 6 },
+        "phase2": { "period": "2025-08 ~ 2026-04", "goal": "대출 상환", "months": 9, "current": true },
+        "phase3": { "period": "2026-05 ~ 2026-07", "goal": "비상금 확보", "months": 3 },
+        "phase4": { "period": "2026-08 ~ 2029-01", "goal": "1억 달성", "months": 30 }
+      }
+    };
+
+    // Utility functions
+    const formatKRW = (num) => new Intl.NumberFormat('ko-KR').format(Math.abs(num));
+    const formatCompact = (num) => {
+      if (Math.abs(num) >= 100000000) return (num / 100000000).toFixed(1) + '억';
+      if (Math.abs(num) >= 10000) return (num / 10000).toFixed(0) + '만';
+      return formatKRW(num);
+    };
+
+    // Category icons and colors
+    const categoryConfig = {
+      '식비': { icon: '🍔', color: '#F45452', bg: 'rgba(244, 84, 82, 0.1)' },
+      '장보기': { icon: '🛒', color: '#F59E0B', bg: 'rgba(245, 158, 11, 0.1)' },
+      '카페': { icon: '☕', color: '#8B5CF6', bg: 'rgba(139, 92, 246, 0.1)' },
+      '경조사': { icon: '💐', color: '#EC4899', bg: 'rgba(236, 72, 153, 0.1)' },
+      '교통': { icon: '🚗', color: '#3182F6', bg: 'rgba(49, 130, 246, 0.1)' },
+      '쇼핑': { icon: '🛍️', color: '#06B6D4', bg: 'rgba(6, 182, 212, 0.1)' },
+      '투자': { icon: '📈', color: '#00C471', bg: 'rgba(0, 196, 113, 0.1)' },
+      '여가': { icon: '🎮', color: '#6366F1', bg: 'rgba(99, 102, 241, 0.1)' },
+      '반려동물': { icon: '🐕', color: '#F472B6', bg: 'rgba(244, 114, 182, 0.1)' },
+      '생활': { icon: '🏠', color: '#64748B', bg: 'rgba(100, 116, 139, 0.1)' },
+      '대출': { icon: '🏦', color: '#EF4444', bg: 'rgba(239, 68, 68, 0.1)' },
+      '보험': { icon: '🛡️', color: '#8B5CF6', bg: 'rgba(139, 92, 246, 0.1)' },
+      '미용': { icon: '💇', color: '#EC4899', bg: 'rgba(236, 72, 153, 0.1)' },
+      '의료': { icon: '🏥', color: '#14B8A6', bg: 'rgba(20, 184, 166, 0.1)' },
+      '기타': { icon: '📋', color: '#6B7280', bg: 'rgba(107, 114, 128, 0.1)' }
+    };
+
+    // Components
+    const TopBar = ({ title }) => (
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '16px 20px',
+        background: '#FFFFFF',
+      }}>
+        <button style={{ background: 'none', border: 'none', padding: '8px', margin: '-8px', fontSize: '20px' }}>←</button>
+        <span style={{ fontSize: '17px', fontWeight: 600, color: '#191F28' }}>{title}</span>
+        <button style={{ background: 'none', border: 'none', padding: '8px', margin: '-8px', fontSize: '20px' }}>⚙️</button>
+      </div>
+    );
+
+    const StatusBanner = ({ status, message, submessage }) => {
+      const configs = {
+        good: { bg: 'linear-gradient(135deg, #00C471 0%, #00A05E 100%)', icon: '👍' },
+        warning: { bg: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)', icon: '⚠️' },
+        danger: { bg: 'linear-gradient(135deg, #F45452 0%, #DC2626 100%)', icon: '🚨' }
+      };
+      const config = configs[status] || configs.good;
+
+      return (
+        <div style={{
+          background: config.bg,
+          margin: '12px',
+          padding: '20px',
+          borderRadius: '20px',
+          color: '#FFFFFF',
+          animation: 'fadeInUp 0.5s ease-out'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+            <span style={{ fontSize: '20px' }}>{config.icon}</span>
+            <span style={{ fontSize: '15px', fontWeight: 500, opacity: 0.9 }}>{message}</span>
+          </div>
+          <p style={{ fontSize: '13px', opacity: 0.8 }}>{submessage}</p>
+        </div>
+      );
+    };
+
+    const MainBalanceCard = ({ data }) => {
+      const currentMonth = data.currentMonth || '2026-03';
+      const summary = data.summary[currentMonth];
+      const budgetGoal = data.budget.monthlyGoal; // 90만원
+      const actualExpenses = summary.actualExpenses || summary.totalSpending - (summary.investmentTotal || 0);
+      const investmentTotal = summary.investmentTotal || 0;
+      const isOverBudget = actualExpenses > budgetGoal;
+      const overAmount = actualExpenses - budgetGoal;
+      const remainingBudget = budgetGoal - actualExpenses;
+      const usedPercent = (actualExpenses / budgetGoal) * 100;
+
+      return (
+        <div className="card" style={{ padding: '28px 20px' }}>
+          <p style={{ fontSize: '15px', fontWeight: 500, color: '#6B7684', marginBottom: '8px' }}>
+            3월 지출 현황 💰
+          </p>
+          <p style={{ fontSize: '36px', fontWeight: 700, color: '#191F28', letterSpacing: '-1px' }}>
+            {formatKRW(actualExpenses)}
+            <span style={{ fontSize: '24px', fontWeight: 600, marginLeft: '2px' }}>원</span>
+          </p>
+          <p style={{ fontSize: '13px', color: '#8B95A1', marginTop: '4px' }}>
+            투자 제외 순수 지출
+          </p>
+
+          {/* Over Budget Alert */}
+          {isOverBudget && (
+            <div style={{
+              marginTop: '16px',
+              padding: '14px 16px',
+              background: 'linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%)',
+              borderRadius: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px'
+            }}>
+              <span style={{ fontSize: '20px' }}>🚨</span>
+              <div>
+                <p style={{ fontSize: '14px', fontWeight: 600, color: '#DC2626' }}>
+                  예산 초과 +{formatKRW(overAmount)}원
+                </p>
+                <p style={{ fontSize: '12px', color: '#B91C1C' }}>
+                  월 목표 {formatKRW(budgetGoal)}원 대비 {(usedPercent - 100).toFixed(1)}% 초과
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Investment Banner */}
+          <div style={{
+            marginTop: '16px',
+            padding: '14px 16px',
+            background: 'linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%)',
+            borderRadius: '12px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px'
+          }}>
+            <span style={{ fontSize: '20px' }}>📈</span>
+            <div style={{ flex: 1 }}>
+              <p style={{ fontSize: '14px', fontWeight: 600, color: '#0369A1' }}>
+                이번 달 투자
+              </p>
+              <p style={{ fontSize: '12px', color: '#0284C7' }}>
+                자산으로 이동 (지출 미포함)
+              </p>
+            </div>
+            <p style={{ fontSize: '18px', fontWeight: 700, color: '#0369A1' }}>
+              {formatKRW(investmentTotal)}원
+            </p>
+          </div>
+
+          <div style={{ marginTop: '20px' }}>
+            <div style={{
+              width: '100%',
+              height: '8px',
+              background: '#E5E8EB',
+              borderRadius: '4px',
+              overflow: 'hidden',
+              marginBottom: '12px',
+              position: 'relative'
+            }}>
+              <div className="progress-bar-animated" style={{
+                width: `${Math.min(usedPercent, 100)}%`,
+                height: '100%',
+                background: isOverBudget ? '#F45452' : usedPercent > 80 ? '#F59E0B' : '#00C471',
+                borderRadius: '4px',
+                transition: 'width 1s ease-out'
+              }} />
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '14px', color: isOverBudget ? '#F45452' : '#00C471', fontWeight: 500 }}>
+                {usedPercent.toFixed(1)}% 사용
+              </span>
+              <span style={{ fontSize: '14px', color: '#8B95A1' }}>
+                목표 {formatKRW(budgetGoal)}원
+              </span>
+            </div>
+          </div>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '12px',
+            marginTop: '20px',
+            padding: '16px',
+            background: '#F4F5F7',
+            borderRadius: '16px'
+          }}>
+            <div>
+              <p style={{ fontSize: '13px', color: '#8B95A1', marginBottom: '4px' }}>남은 일수</p>
+              <p style={{ fontSize: '20px', fontWeight: 700, color: '#191F28' }}>{summary.daysRemaining}일</p>
+            </div>
+            <div>
+              <p style={{ fontSize: '13px', color: '#8B95A1', marginBottom: '4px' }}>초과 금액</p>
+              <p style={{ fontSize: '20px', fontWeight: 700, color: isOverBudget ? '#F45452' : '#00C471' }}>
+                {isOverBudget ? '+' : ''}{formatKRW(overAmount)}원
+              </p>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    const CategoryBreakdown = ({ expenses, filter, setFilter }) => {
+      const categoryTotals = {};
+      expenses.forEach(exp => {
+        categoryTotals[exp.category] = (categoryTotals[exp.category] || 0) + exp.amount;
+      });
+
+      const sorted = Object.entries(categoryTotals)
+        .map(([name, total]) => ({ name, total }))
+        .sort((a, b) => b.total - a.total);
+
+      const total = sorted.reduce((sum, c) => sum + c.total, 0);
+      const categories = ['전체', ...sorted.map(c => c.name)];
+
+      return (
+        <div className="card" style={{ padding: '20px' }}>
+          <p style={{ fontSize: '17px', fontWeight: 600, color: '#191F28', marginBottom: '16px' }}>
+            카테고리별 지출 🏷️
+          </p>
+
+          {/* Filter Pills */}
+          <div style={{
+            display: 'flex',
+            gap: '8px',
+            marginBottom: '20px',
+            overflowX: 'auto',
+            paddingBottom: '4px'
+          }}>
+            {categories.slice(0, 5).map(cat => (
+              <button
+                key={cat}
+                className={`pill ${filter === cat ? 'active' : ''}`}
+                onClick={() => setFilter(cat)}
+              >
+                {cat === '전체' ? '전체' : `${categoryConfig[cat]?.icon || ''} ${cat}`}
+              </button>
+            ))}
+          </div>
+
+          {/* Donut Chart */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '20px' }}>
+            <div className="donut-chart">
+              <svg width="160" height="160" viewBox="0 0 160 160">
+                {sorted.map((cat, i) => {
+                  const percentage = (cat.total / total) * 100;
+                  const prevPercentages = sorted.slice(0, i).reduce((sum, c) => sum + (c.total / total) * 100, 0);
+                  const circumference = 2 * Math.PI * 60;
+                  const offset = (prevPercentages / 100) * circumference;
+                  const dash = (percentage / 100) * circumference;
+
+                  return (
+                    <circle
+                      key={cat.name}
+                      cx="80"
+                      cy="80"
+                      r="60"
+                      fill="none"
+                      stroke={categoryConfig[cat.name]?.color || '#6B7684'}
+                      strokeWidth="20"
+                      strokeDasharray={`${dash} ${circumference}`}
+                      strokeDashoffset={-offset}
+                      style={{ transition: 'all 0.6s ease-out' }}
+                    />
+                  );
+                })}
+              </svg>
+              <div className="donut-center">
+                <p style={{ fontSize: '12px', color: '#8B95A1' }}>총 지출</p>
+                <p style={{ fontSize: '18px', fontWeight: 700, color: '#191F28' }}>{formatCompact(total)}</p>
+              </div>
+            </div>
+
+            <div style={{ flex: 1 }}>
+              {sorted.slice(0, 4).map((cat, i) => (
+                <div key={cat.name} style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '8px',
+                  animation: `slideIn 0.4s ease-out ${i * 0.1}s forwards`,
+                  opacity: 0
+                }}>
+                  <div style={{
+                    width: '8px',
+                    height: '8px',
+                    borderRadius: '50%',
+                    background: categoryConfig[cat.name]?.color || '#6B7684',
+                    marginRight: '8px'
+                  }} />
+                  <span style={{ fontSize: '13px', color: '#6B7684', flex: 1 }}>{cat.name}</span>
+                  <span style={{ fontSize: '13px', fontWeight: 600, color: '#191F28' }}>
+                    {((cat.total / total) * 100).toFixed(0)}%
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Category List */}
+          {sorted.map((cat, i) => (
+            <div
+              key={cat.name}
+              style={{
+                display: filter !== '전체' && filter !== cat.name ? 'none' : 'flex',
+                alignItems: 'center',
+                padding: '14px 0',
+                borderBottom: '1px solid #E5E8EB',
+                animation: `slideIn 0.4s ease-out ${i * 0.05}s forwards`,
+                opacity: 0
+              }}
+            >
+              <div style={{
+                width: '44px',
+                height: '44px',
+                background: categoryConfig[cat.name]?.bg || '#F4F5F7',
+                borderRadius: '14px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '20px',
+                marginRight: '14px'
+              }}>
+                {categoryConfig[cat.name]?.icon || '💳'}
+              </div>
+              <div style={{ flex: 1 }}>
+                <p style={{ fontSize: '15px', fontWeight: 600, color: '#191F28', marginBottom: '2px' }}>{cat.name}</p>
+                <p style={{ fontSize: '13px', color: '#8B95A1' }}>전체의 {((cat.total / total) * 100).toFixed(0)}%</p>
+              </div>
+              <p style={{ fontSize: '16px', fontWeight: 600, color: '#191F28' }}>{formatKRW(cat.total)}원</p>
+            </div>
+          ))}
+        </div>
+      );
+    };
+
+    const RecentExpenses = ({ expenses }) => {
+      const sorted = [...expenses].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 10);
+
+      return (
+        <div className="card" style={{ padding: '20px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <p style={{ fontSize: '17px', fontWeight: 600, color: '#191F28' }}>최근 지출 📝</p>
+            <button style={{ background: 'none', border: 'none', fontSize: '14px', color: '#8B95A1' }}>
+              전체보기 →
+            </button>
+          </div>
+
+          {sorted.map((exp, i) => (
+            <div
+              key={i}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                padding: '14px 0',
+                borderBottom: i < sorted.length - 1 ? '1px solid #E5E8EB' : 'none'
+              }}
+            >
+              <div style={{
+                width: '44px',
+                height: '44px',
+                background: categoryConfig[exp.category]?.bg || '#F4F5F7',
+                borderRadius: '14px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '18px',
+                marginRight: '14px'
+              }}>
+                {categoryConfig[exp.category]?.icon || '💳'}
+              </div>
+              <div style={{ flex: 1 }}>
+                <p style={{ fontSize: '15px', fontWeight: 500, color: '#191F28', marginBottom: '2px' }}>{exp.item}</p>
+                <p style={{ fontSize: '13px', color: '#8B95A1' }}>{exp.date.slice(5)} · {exp.category}</p>
+              </div>
+              <p style={{
+                fontSize: '16px',
+                fontWeight: 600,
+                color: exp.category === '투자' ? '#00C471' : '#191F28'
+              }}>
+                {exp.category === '투자' ? '+' : '-'}{formatKRW(exp.amount)}원
+              </p>
+            </div>
+          ))}
+        </div>
+      );
+    };
+
+    const CalendarView = ({ expenses, selectedDate, setSelectedDate }) => {
+      const year = 2026;
+      const month = 3;
+      const daysInMonth = 31;
+      const firstDayOfWeek = 0; // 2026-03-01 is Sunday (0=Sun)
+      const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
+      const today = 7;
+
+      // Calculate daily totals
+      const dailyTotals = {};
+      expenses.forEach(exp => {
+        const day = parseInt(exp.date.split('-')[2]);
+        dailyTotals[day] = (dailyTotals[day] || 0) + exp.amount;
+      });
+
+      const maxDailyTotal = Math.max(...Object.values(dailyTotals), 1);
+
+      // Get selected date expenses
+      const selectedDay = selectedDate ? parseInt(selectedDate.split('-')[2]) : null;
+      const selectedExpenses = selectedDate
+        ? expenses.filter(e => e.date === selectedDate)
+        : [];
+      const selectedTotal = selectedExpenses.reduce((sum, e) => sum + e.amount, 0);
+
+      // Generate calendar grid
+      const calendarDays = [];
+      for (let i = 0; i < firstDayOfWeek; i++) {
+        calendarDays.push(null);
+      }
+      for (let day = 1; day <= daysInMonth; day++) {
+        calendarDays.push(day);
+      }
+
+      const getIntensity = (amount) => {
+        if (!amount) return 0;
+        const ratio = amount / maxDailyTotal;
+        if (ratio > 0.7) return 3;
+        if (ratio > 0.4) return 2;
+        if (ratio > 0) return 1;
+        return 0;
+      };
+
+      return (
+        <>
+          {/* Calendar Card */}
+          <div className="card" style={{ padding: '20px' }}>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '20px'
+            }}>
+              <button style={{
+                background: 'none',
+                border: 'none',
+                fontSize: '20px',
+                color: '#8B95A1',
+                padding: '8px'
+              }}>←</button>
+              <p style={{ fontSize: '17px', fontWeight: 600, color: '#191F28' }}>
+                2026년 3월
+              </p>
+              <button style={{
+                background: 'none',
+                border: 'none',
+                fontSize: '20px',
+                color: '#8B95A1',
+                padding: '8px'
+              }}>→</button>
+            </div>
+
+            {/* Week Header */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(7, 1fr)',
+              gap: '4px',
+              marginBottom: '8px'
+            }}>
+              {weekDays.map((day, i) => (
+                <div key={day} style={{
+                  textAlign: 'center',
+                  fontSize: '12px',
+                  fontWeight: 500,
+                  color: i === 0 ? '#F45452' : i === 6 ? '#3182F6' : '#8B95A1',
+                  padding: '8px 0'
+                }}>
+                  {day}
+                </div>
+              ))}
+            </div>
+
+            {/* Calendar Grid */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(7, 1fr)',
+              gap: '4px'
+            }}>
+              {calendarDays.map((day, i) => {
+                if (day === null) {
+                  return <div key={`empty-${i}`} style={{ aspectRatio: '1' }} />;
+                }
+
+                const dateStr = `2026-03-${String(day).padStart(2, '0')}`;
+                const hasExpense = dailyTotals[day] > 0;
+                const isSelected = selectedDate === dateStr;
+                const isToday = day === today;
+                const isFuture = day > today;
+                const dayOfWeek = (firstDayOfWeek + day - 1) % 7;
+                const intensity = getIntensity(dailyTotals[day]);
+
+                return (
+                  <button
+                    key={day}
+                    onClick={() => !isFuture && setSelectedDate(dateStr)}
+                    style={{
+                      aspectRatio: '1',
+                      border: 'none',
+                      borderRadius: '12px',
+                      background: isSelected
+                        ? '#3182F6'
+                        : isToday
+                          ? '#E8F3FF'
+                          : hasExpense
+                            ? intensity === 3 ? 'rgba(244, 84, 82, 0.2)'
+                              : intensity === 2 ? 'rgba(245, 158, 11, 0.15)'
+                              : 'rgba(49, 130, 246, 0.1)'
+                            : 'transparent',
+                      cursor: isFuture ? 'default' : 'pointer',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '2px',
+                      transition: 'all 0.2s',
+                      opacity: isFuture ? 0.3 : 1
+                    }}
+                  >
+                    <span style={{
+                      fontSize: '14px',
+                      fontWeight: isToday || isSelected ? 600 : 400,
+                      color: isSelected
+                        ? '#FFFFFF'
+                        : dayOfWeek === 0
+                          ? '#F45452'
+                          : dayOfWeek === 6
+                            ? '#3182F6'
+                            : '#191F28'
+                    }}>
+                      {day}
+                    </span>
+                    {hasExpense && !isSelected && (
+                      <span style={{
+                        fontSize: '9px',
+                        fontWeight: 600,
+                        color: intensity === 3 ? '#F45452' : intensity === 2 ? '#F59E0B' : '#3182F6'
+                      }}>
+                        {formatCompact(dailyTotals[day])}
+                      </span>
+                    )}
+                    {isSelected && hasExpense && (
+                      <span style={{ fontSize: '9px', color: 'rgba(255,255,255,0.8)' }}>
+                        {formatCompact(dailyTotals[day])}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Legend */}
+            <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: '16px',
+              marginTop: '16px',
+              paddingTop: '16px',
+              borderTop: '1px solid #E5E8EB'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'rgba(49, 130, 246, 0.3)' }} />
+                <span style={{ fontSize: '11px', color: '#8B95A1' }}>적음</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'rgba(245, 158, 11, 0.4)' }} />
+                <span style={{ fontSize: '11px', color: '#8B95A1' }}>보통</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'rgba(244, 84, 82, 0.4)' }} />
+                <span style={{ fontSize: '11px', color: '#8B95A1' }}>많음</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Monthly Summary */}
+          <div className="card" style={{ padding: '20px' }}>
+            <p style={{ fontSize: '17px', fontWeight: 600, color: '#191F28', marginBottom: '16px' }}>
+              3월 지출 요약 📊
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
+              <div style={{ background: '#F4F5F7', borderRadius: '14px', padding: '14px', textAlign: 'center' }}>
+                <p style={{ fontSize: '11px', color: '#8B95A1', marginBottom: '4px' }}>지출 일수</p>
+                <p style={{ fontSize: '18px', fontWeight: 700, color: '#191F28' }}>
+                  {Object.keys(dailyTotals).length}일
+                </p>
+              </div>
+              <div style={{ background: '#F4F5F7', borderRadius: '14px', padding: '14px', textAlign: 'center' }}>
+                <p style={{ fontSize: '11px', color: '#8B95A1', marginBottom: '4px' }}>일 평균</p>
+                <p style={{ fontSize: '18px', fontWeight: 700, color: '#3182F6' }}>
+                  {formatCompact(Math.round(Object.values(dailyTotals).reduce((a, b) => a + b, 0) / Object.keys(dailyTotals).length))}
+                </p>
+              </div>
+              <div style={{ background: '#F4F5F7', borderRadius: '14px', padding: '14px', textAlign: 'center' }}>
+                <p style={{ fontSize: '11px', color: '#8B95A1', marginBottom: '4px' }}>최고 지출</p>
+                <p style={{ fontSize: '18px', fontWeight: 700, color: '#F45452' }}>
+                  {formatCompact(maxDailyTotal)}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Selected Date Expenses */}
+          {selectedDate && (
+            <div className="card" style={{ padding: '20px', animation: 'fadeInUp 0.3s ease-out' }}>
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '16px'
+              }}>
+                <p style={{ fontSize: '17px', fontWeight: 600, color: '#191F28' }}>
+                  {parseInt(selectedDate.split('-')[1])}월 {parseInt(selectedDate.split('-')[2])}일 지출
+                </p>
+                <span style={{
+                  fontSize: '17px',
+                  fontWeight: 700,
+                  color: selectedTotal > 0 ? '#F45452' : '#8B95A1'
+                }}>
+                  {selectedTotal > 0 ? `-${formatKRW(selectedTotal)}원` : '지출 없음'}
+                </span>
+              </div>
+
+              {selectedExpenses.length === 0 ? (
+                <div style={{
+                  textAlign: 'center',
+                  padding: '32px 0',
+                  color: '#8B95A1'
+                }}>
+                  <span style={{ fontSize: '40px', display: 'block', marginBottom: '12px' }}>📭</span>
+                  <p style={{ fontSize: '14px' }}>이 날은 지출 내역이 없어요</p>
+                </div>
+              ) : (
+                selectedExpenses.map((exp, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      padding: '14px 0',
+                      borderBottom: i < selectedExpenses.length - 1 ? '1px solid #E5E8EB' : 'none',
+                      animation: `slideIn 0.3s ease-out ${i * 0.05}s forwards`,
+                      opacity: 0
+                    }}
+                  >
+                    <div style={{
+                      width: '44px',
+                      height: '44px',
+                      background: categoryConfig[exp.category]?.bg || '#F4F5F7',
+                      borderRadius: '14px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '18px',
+                      marginRight: '14px'
+                    }}>
+                      {categoryConfig[exp.category]?.icon || '💳'}
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <p style={{ fontSize: '15px', fontWeight: 500, color: '#191F28', marginBottom: '2px' }}>
+                        {exp.item}
+                      </p>
+                      <p style={{ fontSize: '13px', color: '#8B95A1' }}>{exp.category}</p>
+                    </div>
+                    <p style={{
+                      fontSize: '16px',
+                      fontWeight: 600,
+                      color: exp.category === '투자' ? '#00C471' : '#191F28'
+                    }}>
+                      {exp.category === '투자' ? '+' : '-'}{formatKRW(exp.amount)}원
+                    </p>
+                  </div>
+                ))
+              )}
+            </div>
+          )}
+        </>
+      );
+    };
+
+    const BottomNav = ({ activeTab, setActiveTab }) => (
+      <div className="bottom-nav">
+        <button className={`nav-item ${activeTab === 'spending' ? 'active' : ''}`} onClick={() => setActiveTab('spending')}>
+          <span className="icon">💳</span>
+          <span>소비</span>
+        </button>
+        <button className={`nav-item ${activeTab === 'calendar' ? 'active' : ''}`} onClick={() => setActiveTab('calendar')}>
+          <span className="icon">📅</span>
+          <span>캘린더</span>
+        </button>
+      </div>
+    );
+
+    function App() {
+      const [activeTab, setActiveTab] = React.useState('spending');
+      const [categoryFilter, setCategoryFilter] = React.useState('전체');
+      const [selectedDate, setSelectedDate] = React.useState('2026-03-07');
+      const data = budgetData;
+      const currentMonth = data.currentMonth || '2026-03';
+      const expenses = data.expenses[currentMonth];
+      const summary = data.summary[currentMonth];
+      const usedPercent = (summary.actualExpenses / data.budget.monthlyGoal) * 100;
+
+      const getStatusMessage = () => {
+        if (usedPercent > 80) return { status: 'danger', message: '예산을 조금 넘었어요', sub: '남은 기간 동안 지출을 줄여볼까요?' };
+        if (usedPercent > 60) return { status: 'warning', message: '예산의 절반 이상 썼어요', sub: '남은 예산을 잘 관리해봐요!' };
+        return { status: 'good', message: '잘하고 있어요!', sub: '예산 내에서 잘 관리하고 있어요' };
+      };
+
+      const statusMsg = getStatusMessage();
+
+      return (
+        <div className="container">
+          <TopBar title="HANEUL의 예산" />
+
+          <StatusBanner
+            status={statusMsg.status}
+            message={statusMsg.message}
+            submessage={statusMsg.sub}
+          />
+
+          {activeTab === 'calendar' && (
+            <CalendarView
+              expenses={expenses}
+              selectedDate={selectedDate}
+              setSelectedDate={setSelectedDate}
+            />
+          )}
+
+          {activeTab === 'spending' && (
+            <>
+              <MainBalanceCard data={data} />
+              <CategoryBreakdown expenses={expenses} filter={categoryFilter} setFilter={setCategoryFilter} />
+              <RecentExpenses expenses={expenses} />
+            </>
+          )}
+
+          <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

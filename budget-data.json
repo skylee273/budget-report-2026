@@ -1,0 +1,183 @@
+{
+  "lastUpdated": "2026-03-01",
+  "profile": {
+    "name": "HANEUL",
+    "goal": "2029년 1월 1억 달성",
+    "jobTransition": {
+      "date": "2025-08",
+      "currentSalary": 4800000,
+      "newSalary": 5300000,
+      "severancePay": 30000000
+    }
+  },
+  "income": {
+    "monthly": 4800000,
+    "extraIncome": [
+      { "date": "2025-02-03", "category": "용돈", "item": "용돈", "amount": 100000 },
+      { "date": "2025-02-06", "category": "용돈", "item": "생일 선물", "amount": 300000 },
+      { "date": "2026-03-03", "category": "용돈", "item": "엄마", "amount": 240000 }
+    ]
+  },
+  "loans": [
+    { "name": "대출 1", "principal": 27638623, "rate": 12.46, "monthlyPayment": 769700 },
+    { "name": "대출 2", "principal": 24608004, "rate": 15.5, "monthlyPayment": 726904 }
+  ],
+  "loanPayments": {
+    "2025-02": [
+      { "date": "2025-02-03", "name": "대출 1", "amount": 769700 },
+      { "date": "2025-02-03", "name": "대출 2", "amount": 252010 },
+      { "date": "2025-02-25", "name": "대출 2", "amount": 474894, "pending": true }
+    ]
+  },
+  "fixedExpenses": {
+    "loanPayment": 1496604,
+    "insurance": 248815,
+    "subscription": 192292,
+    "socialSaving": 130000,
+    "housingComm": 145430,
+    "total": 2213141
+  },
+  "assets": {
+    "stock": 652363,
+    "pensionETF": 296343,
+    "housingFund": 120000,
+    "insuranceSaving": 10290000,
+    "total": 11358706
+  },
+  "creditScore": {
+    "kcb": { "score": 642, "grade": 6 },
+    "nice": { "score": 757, "grade": 5 }
+  },
+  "netWorth": -40907921,
+  "actualAvailable": 13366185,
+  "budget": {
+    "monthlyGoal": 900000,
+    "february2025": {
+      "goal": 900000,
+      "extraIncome": 400000,
+      "totalBudget": 1300000
+    },
+    "march2026": {
+      "goal": 900000,
+      "salary": 6370000,
+      "totalBudget": 900000
+    }
+  },
+  "expenses": {
+    "2025-02": [
+      { "date": "2025-02-01", "category": "장보기", "item": "미역", "amount": 1120, "store": "마트", "tag": "데이트" },
+      { "date": "2025-02-01", "category": "장보기", "item": "식재료", "amount": 56605, "store": "하나로마트", "tag": "데이트" },
+      { "date": "2025-02-01", "category": "경조사", "item": "축의금", "amount": 100000, "store": "결혼식" },
+      { "date": "2025-02-01", "category": "교통", "item": "세차", "amount": 15000, "store": "세차장" },
+      { "date": "2025-02-01", "category": "카페", "item": "커피", "amount": 2700, "store": "카페" },
+      { "date": "2025-02-03", "category": "카페", "item": "커피", "amount": 5000, "store": "카페" },
+      { "date": "2025-02-05", "category": "식비", "item": "치킨", "amount": 15000 },
+      { "date": "2025-02-05", "category": "식비", "item": "술", "amount": 14800 },
+      { "date": "2025-02-06", "category": "식비", "item": "치킨", "amount": 15000 },
+      { "date": "2025-02-06", "category": "식비", "item": "술", "amount": 7400 },
+      { "date": "2025-02-07", "category": "쇼핑", "item": "쿠팡", "amount": 23350, "store": "쿠팡" },
+      { "date": "2025-02-07", "category": "식비", "item": "회", "amount": 27750 },
+      { "date": "2025-02-08", "category": "경조사", "item": "축의금 (송찹섭)", "amount": 100000, "store": "결혼식" },
+      { "date": "2025-02-08", "category": "장보기", "item": "생선 (이연희)", "amount": 27400 },
+      { "date": "2025-02-09", "category": "카페", "item": "커피", "amount": 6150 },
+      { "date": "2025-02-01", "category": "투자", "item": "주식 매수", "amount": 29000 },
+      { "date": "2025-02-03", "category": "투자", "item": "주식 매수", "amount": 29000 },
+      { "date": "2025-02-04", "category": "투자", "item": "주식 매수", "amount": 29000 },
+      { "date": "2025-02-05", "category": "투자", "item": "주식 매수", "amount": 29000 },
+      { "date": "2025-02-09", "category": "투자", "item": "주식 매수", "amount": 20000 },
+      { "date": "2025-02-10", "category": "식비", "item": "양꼬치", "amount": 24500 },
+      { "date": "2025-02-10", "category": "투자", "item": "주식 매수", "amount": 100000 },
+      { "date": "2025-02-13", "category": "식비", "item": "회", "amount": 32000 },
+      { "date": "2025-02-13", "category": "투자", "item": "주식 매수", "amount": 10000 },
+      { "date": "2025-02-14", "category": "식비", "item": "피자", "amount": 10520 },
+      { "date": "2025-02-14", "category": "식비", "item": "닭칼국수", "amount": 14000 },
+      { "date": "2025-02-14", "category": "식비", "item": "저녁", "amount": 35500 },
+      { "date": "2025-02-14", "category": "여가", "item": "오락실", "amount": 2500 },
+      { "date": "2025-02-15", "category": "식비", "item": "점심", "amount": 14200 },
+      { "date": "2025-02-15", "category": "투자", "item": "주식 매수", "amount": 20000 },
+      { "date": "2025-02-16", "category": "경조사", "item": "설날 선물", "amount": 25000 },
+      { "date": "2025-02-16", "category": "반려동물", "item": "강아지 미용", "amount": 100000 },
+      { "date": "2025-02-17", "category": "쇼핑", "item": "방향제, 물티슈, 헤어롤", "amount": 53310, "store": "쿠팡" },
+      { "date": "2025-02-18", "category": "구독", "item": "Claude 구독", "amount": 159500, "note": "$110" },
+      { "date": "2025-02-18", "category": "카페", "item": "커피", "amount": 9250 },
+      { "date": "2025-02-20", "category": "여가", "item": "오락실", "amount": 5000 },
+      { "date": "2025-02-20", "category": "식비", "item": "곱창", "amount": 44500 },
+      { "date": "2025-02-21", "category": "금융", "item": "신용지킴이", "amount": 900 },
+      { "date": "2025-02-21", "category": "카페", "item": "마카롱", "amount": 7720 },
+      { "date": "2025-02-21", "category": "카페", "item": "디저트", "amount": 5900 },
+      { "date": "2025-02-21", "category": "식비", "item": "경주집 점심", "amount": 13000 },
+      { "date": "2025-02-21", "category": "교통", "item": "기름", "amount": 25000 },
+      { "date": "2025-02-21", "category": "생활", "item": "편의점", "amount": 5900 },
+      { "date": "2025-02-22", "category": "식비", "item": "저녁", "amount": 50000 }
+    ],
+    "2026-03": [
+      { "date": "2026-03-01", "category": "투자", "item": "연금저축", "amount": 500693 },
+      { "date": "2026-03-01", "category": "투자", "item": "ISA", "amount": 500000 },
+      { "date": "2026-03-01", "category": "투자", "item": "비상금 CMA", "amount": 600000 },
+      { "date": "2026-03-01", "category": "투자", "item": "IRP", "amount": 250000 },
+      { "date": "2026-03-01", "category": "반려동물", "item": "강아지 간식", "amount": 27490, "store": "쿠팡" },
+      { "date": "2026-03-01", "category": "장보기", "item": "참기름,계란", "amount": 25950, "store": "쿠팡" },
+      { "date": "2026-03-01", "category": "장보기", "item": "저녁 장보기", "amount": 26070 },
+      { "date": "2026-03-02", "category": "반려동물", "item": "강아지 배변패드", "amount": 8490, "store": "쿠팡" },
+      { "date": "2026-03-02", "category": "장보기", "item": "얼음", "amount": 2200 },
+      { "date": "2026-03-02", "category": "생활", "item": "맥주", "amount": 4500, "store": "편의점" },
+      { "date": "2026-03-03", "category": "대출", "item": "대출 상환", "amount": 452010 },
+      { "date": "2026-03-03", "category": "대출", "item": "대출 상환", "amount": 769700 },
+      { "date": "2026-03-03", "category": "보험", "item": "삼성화재", "amount": 103243 },
+      { "date": "2026-03-04", "category": "미용", "item": "미용실", "amount": 40000 },
+      { "date": "2026-03-04", "category": "기타", "item": "서류 제출", "amount": 3000 },
+      { "date": "2026-03-04", "category": "의료", "item": "스케일링", "amount": 18200 },
+      { "date": "2026-03-04", "category": "쇼핑", "item": "다이소", "amount": 6000 },
+      { "date": "2026-03-04", "category": "생활", "item": "편의점", "amount": 2600 },
+      { "date": "2026-03-04", "category": "생활", "item": "세탁소", "amount": 28000 },
+      { "date": "2026-03-06", "category": "카페", "item": "파리크라상", "amount": 13500 },
+      { "date": "2026-03-07", "category": "생활", "item": "음료수", "amount": 800 },
+      { "date": "2026-03-07", "category": "식비", "item": "야식 백정", "amount": 26500 }
+    ]
+  },
+  "investments": {
+    "comment": "자산 이동 (별도 수입으로 투자한 것만)",
+    "2025-02": [
+      { "date": "2025-02-06", "item": "주식 매수 (생일용돈)", "amount": 300000 }
+    ],
+    "totalFebruary": 300000
+  },
+  "recharges": {
+    "2025-02": [
+      { "date": "2025-02-06", "item": "경기지역화폐", "amount": 180000 },
+      { "date": "2025-02-18", "item": "빨래방 충전", "amount": 60000 }
+    ],
+    "totalFebruary": 240000
+  },
+  "summary": {
+    "2025-02": {
+      "budgetGoal": 900000,
+      "totalSpending": 1321475,
+      "investmentTotal": 266000,
+      "actualExpenses": 1055475,
+      "overBudget": 155475,
+      "totalRecharge": 240000,
+      "daysRemaining": 6
+    },
+    "2026-03": {
+      "budgetGoal": 900000,
+      "salary": 6370000,
+      "investmentTotal": 1850693,
+      "actualExpenses": 0,
+      "remainingBudget": 900000,
+      "daysRemaining": 31
+    }
+  },
+  "roadmap": {
+    "phase1": { "period": "2025-02 ~ 2025-07", "goal": "서바이벌 (8월까지 버티기)", "months": 6 },
+    "phase2": { "period": "2025-08 ~ 2026-04", "goal": "대출 폭격 (무차입 달성)", "months": 9 },
+    "phase3": { "period": "2026-05 ~ 2026-07", "goal": "비상금 500만 확보", "months": 3 },
+    "phase4": { "period": "2026-08 ~ 2029-01", "goal": "자산 증식 (1억 달성)", "months": 30 }
+  },
+  "taxStrategy": {
+    "pensionSaving": { "annual": 6000000, "taxBenefit": 792000 },
+    "irp": { "annual": 3000000, "taxBenefit": 396000 },
+    "isa": { "annual": 20000000, "taxFreeLimit": 2000000 },
+    "totalAnnualBenefit": 1485000
+  }
+}
