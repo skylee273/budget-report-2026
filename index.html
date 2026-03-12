@@ -213,7 +213,7 @@
 
   <script type="text/babel">
     const budgetData = {
-      "lastUpdated": "2026-03-07",
+      "lastUpdated": "2026-03-12",
       "currentMonth": "2026-03",
       "profile": {
         "name": "HANEUL",
@@ -262,7 +262,16 @@
           { "date": "2026-03-04", "category": "생활", "item": "세탁소", "amount": 28000 },
           { "date": "2026-03-06", "category": "카페", "item": "파리크라상", "amount": 13500 },
           { "date": "2026-03-07", "category": "생활", "item": "음료수", "amount": 800 },
-          { "date": "2026-03-07", "category": "식비", "item": "야식 백정", "amount": 26500 }
+          { "date": "2026-03-07", "category": "식비", "item": "야식 백정", "amount": 26500 },
+          { "date": "2026-03-07", "category": "여가", "item": "e북", "amount": 34910 },
+          { "date": "2026-03-07", "category": "장보기", "item": "장보기", "amount": 46750 },
+          { "date": "2026-03-08", "category": "식비", "item": "점심", "amount": 12600 },
+          { "date": "2026-03-09", "category": "생활", "item": "통신요금", "amount": 30800 },
+          { "date": "2026-03-10", "category": "식비", "item": "야식", "amount": 28500 },
+          { "date": "2026-03-11", "category": "식비", "item": "등갈비", "amount": 30600 },
+          { "date": "2026-03-12", "category": "식비", "item": "마라탕", "amount": 12600 },
+          { "date": "2026-03-12", "category": "생활", "item": "폼클렌징, 칫솔", "amount": 36000 },
+          { "date": "2026-03-12", "category": "카페", "item": "커피", "amount": 15250 }
         ]
       },
       "extraIncome": {
@@ -276,10 +285,10 @@
           "extraIncome": 240000,
           "salary": 6370000,
           "investmentTotal": 1850693,
-          "totalSpending": 233300,
-          "actualExpenses": 233300,
-          "remainingBudget": 906700,
-          "daysRemaining": 24
+          "totalSpending": 481310,
+          "actualExpenses": 481310,
+          "remainingBudget": 418690,
+          "daysRemaining": 19
         }
       },
       "roadmap": {
@@ -673,7 +682,7 @@
       const daysInMonth = 31;
       const firstDayOfWeek = 0; // 2026-03-01 is Sunday (0=Sun)
       const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
-      const today = 7;
+      const today = 12;
 
       // Calculate daily totals
       const dailyTotals = {};
@@ -981,7 +990,7 @@
     function App() {
       const [activeTab, setActiveTab] = React.useState('spending');
       const [categoryFilter, setCategoryFilter] = React.useState('전체');
-      const [selectedDate, setSelectedDate] = React.useState('2026-03-07');
+      const [selectedDate, setSelectedDate] = React.useState('2026-03-12');
       const data = budgetData;
       const currentMonth = data.currentMonth || '2026-03';
       const expenses = data.expenses[currentMonth];
