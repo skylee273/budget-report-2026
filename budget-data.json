@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-03-12",
+  "lastUpdated": "2026-03-14",
   "profile": {
     "name": "HANEUL",
     "goal": "2029년 1월 1억 달성",
@@ -141,7 +141,10 @@
       { "date": "2026-03-11", "category": "식비", "item": "등갈비", "amount": 30600 },
       { "date": "2026-03-12", "category": "식비", "item": "마라탕", "amount": 12600 },
       { "date": "2026-03-12", "category": "생활", "item": "폼클렌징, 칫솔", "amount": 36000 },
-      { "date": "2026-03-12", "category": "카페", "item": "커피", "amount": 15250 }
+      { "date": "2026-03-12", "category": "카페", "item": "커피", "amount": 15250 },
+      { "date": "2026-03-13", "category": "장보기", "item": "마트", "amount": 24380, "store": "마트" },
+      { "date": "2026-03-14", "category": "경조사", "item": "가윤이 부모님 선물 (참기름)", "amount": 72000 },
+      { "date": "2026-03-14", "category": "경조사", "item": "가윤이 부모님 선물 (꽃)", "amount": 40000 }
     ]
   },
   "investments": {
