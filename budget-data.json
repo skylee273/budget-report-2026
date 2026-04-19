@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-03-29",
+  "lastUpdated": "2026-04-10",
   "profile": {
     "name": "HANEUL",
     "goal": "2029년 1월 1억 달성",
@@ -60,6 +60,10 @@
     "march2026": {
       "goal": 900000,
       "salary": 6370000,
+      "totalBudget": 900000
+    },
+    "april2026": {
+      "goal": 900000,
       "totalBudget": 900000
     }
   },
@@ -165,7 +169,28 @@
       { "date": "2026-03-28", "category": "교통", "item": "주차비", "amount": 4000 },
       { "date": "2026-03-28", "category": "장보기", "item": "장보기", "amount": 7000 },
       { "date": "2026-03-28", "category": "식비", "item": "족발", "amount": 16500 },
-      { "date": "2026-03-29", "category": "장보기", "item": "탄산수", "amount": 7500 }
+      { "date": "2026-03-29", "category": "장보기", "item": "탄산수", "amount": 7500 },
+      { "date": "2026-03-30", "category": "장보기", "item": "마트", "amount": 25000 }
+    ],
+    "2026-04": [
+      { "date": "2026-04-01", "category": "투자", "item": "IRP", "amount": 250000 },
+      { "date": "2026-04-01", "category": "투자", "item": "연금저축", "amount": 500000 },
+      { "date": "2026-04-02", "category": "장보기", "item": "마트", "amount": 23000 },
+      { "date": "2026-04-03", "category": "장보기", "item": "마트", "amount": 9500 },
+      { "date": "2026-04-04", "category": "장보기", "item": "마트", "amount": 17000 },
+      { "date": "2026-04-04", "category": "식비", "item": "배민", "amount": 11000 },
+      { "date": "2026-04-04", "category": "카페", "item": "커피", "amount": 17500 },
+      { "date": "2026-04-05", "category": "식비", "item": "순대국", "amount": 16000 },
+      { "date": "2026-04-05", "category": "생활", "item": "편의점", "amount": 2000 },
+      { "date": "2026-04-07", "category": "식비", "item": "배달", "amount": 14500 },
+      { "date": "2026-04-07", "category": "장보기", "item": "장보기", "amount": 9000 },
+      { "date": "2026-04-08", "category": "식비", "item": "막창", "amount": 37000 },
+      { "date": "2026-04-09", "category": "생활", "item": "통신비", "amount": 30800 },
+      { "date": "2026-04-09", "category": "장보기", "item": "마트", "amount": 10000 },
+      { "date": "2026-04-10", "category": "교통", "item": "자동차 단기보험", "amount": 9020 },
+      { "date": "2026-04-10", "category": "교통", "item": "자동차 검사", "amount": 54000 },
+      { "date": "2026-04-10", "category": "의료", "item": "병원", "amount": 11640 },
+      { "date": "2026-04-10", "category": "반려동물", "item": "강아지 돌봄", "amount": 35067 }
     ]
   },
   "investments": {
@@ -196,9 +221,15 @@
       "budgetGoal": 900000,
       "salary": 6370000,
       "investmentTotal": 1850693,
-      "actualExpenses": 0,
-      "remainingBudget": 900000,
-      "daysRemaining": 31
+      "actualExpenses": 877560,
+      "remainingBudget": 22440,
+      "status": "SUCCESS"
+    },
+    "2026-04": {
+      "budgetGoal": 900000,
+      "actualExpenses": 307027,
+      "remainingBudget": 592973,
+      "daysRemaining": 20
     }
   },
   "roadmap": {
